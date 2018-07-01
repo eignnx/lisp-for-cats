@@ -5,13 +5,11 @@ grammar;
 pub AtomT: ast::Atom<'input> = r"[^\s\(\)]+"
     => ast::Atom::from(<>); // One of ast::Atom::{Num, Sym}
 
-Sep = r"\s+";
-
 pub ExprT: ast::Expr<'input> = {
 
     AtomT => ast::Expr::Atom(<>),
 
-    "(" <first: ExprT> <rest: (Sep <ExprT>)*> ")" => {
+    "(" <first: ExprT> <rest: ExprT*> ")" => {
         let mut v = vec![first];
         v.extend(rest);
         ast::Expr::from(v) // Converts into ast::Expr::SExpr
