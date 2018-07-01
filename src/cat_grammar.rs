@@ -1,5 +1,5 @@
 // auto-generated: "lalrpop 0.15.2"
-// sha256: c3efe1a4a7e0233eb29324471176be8e173cc859babaaa19e60702e91d5
+// sha256: 20694adbac549424a545781af140d162588c377a7b2aa56e83779e84a2c5817f
 use ast;
 #[allow(unused_extern_crates)]
 extern crate lalrpop_util as __lalrpop_util;
@@ -48,7 +48,7 @@ mod __parse__AtomT {
         const __TERMINAL: &'static [&'static str] = &[
             r###""(""###,
             r###"")""###,
-            r###"r#"[^\\s\\[\\]\\(\\)\\{\\}\'|]+"#"###,
+            r###"r#"[^\\s\\(\\)]+"#"###,
             r###"r#"\\s+"#"###,
         ];
         __ACTION[(__state * 4)..].iter().zip(__TERMINAL).filter_map(|(&state, terminal)| {
@@ -389,7 +389,7 @@ mod __parse__AtomT {
         _: ::std::marker::PhantomData<()>,
     ) -> (usize, (usize,__Symbol<'input>,usize), usize)
     {
-        // AtomT = r#"[^\\s\\[\\]\\(\\)\\{\\}\'|]+"# => ActionFn(2);
+        // AtomT = r#"[^\\s\\(\\)]+"# => ActionFn(2);
         let __sym0 = __pop_Variant0(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym0.2.clone();
@@ -610,7 +610,7 @@ mod __parse__ExprT {
         const __TERMINAL: &'static [&'static str] = &[
             r###""(""###,
             r###"")""###,
-            r###"r#"[^\\s\\[\\]\\(\\)\\{\\}\'|]+"#"###,
+            r###"r#"[^\\s\\(\\)]+"#"###,
             r###"r#"\\s+"#"###,
         ];
         __ACTION[(__state * 4)..].iter().zip(__TERMINAL).filter_map(|(&state, terminal)| {
@@ -951,7 +951,7 @@ mod __parse__ExprT {
         _: ::std::marker::PhantomData<()>,
     ) -> (usize, (usize,__Symbol<'input>,usize), usize)
     {
-        // AtomT = r#"[^\\s\\[\\]\\(\\)\\{\\}\'|]+"# => ActionFn(2);
+        // AtomT = r#"[^\\s\\(\\)]+"# => ActionFn(2);
         let __sym0 = __pop_Variant0(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym0.2.clone();
@@ -1086,14 +1086,14 @@ mod __intern_token {
     impl __MatcherBuilder {
         pub fn new() -> __MatcherBuilder {
             let __strs: &[&str] = &[
-                "^((?u:[\u{0}-\u{8}\u{e}-\u{1f}!-\\&\\*-Z\\\\-\\\\\\^-z\\~-\u{84}\u{86}-\u{9f}¡-ᙿᚁ-\u{1fff}\u{200b}-‧\u{202a}-\u{202e}‰-⁞\u{2060}-\u{2fff}、-\u{10ffff}])+)",
+                "^((?u:[\u{0}-\u{8}\u{e}-\u{1f}!-\'\\*-\u{84}\u{86}-\u{9f}¡-ᙿᚁ-\u{1fff}\u{200b}-‧\u{202a}-\u{202e}‰-⁞\u{2060}-\u{2fff}、-\u{10ffff}])+)",
                 "^((?u:[\t-\r - \u{85}-\u{85}\u{a0}-\u{a0}\u{1680}-\u{1680}\u{2000}-\u{200a}\u{2028}-\u{2029}\u{202f}-\u{202f}\u{205f}-\u{205f}\u{3000}-\u{3000}])+)",
                 "^((?u:\\())",
                 "^((?u:\\)))",
             ];
             let __regex_set = __regex::RegexSet::new(__strs).unwrap();
             let __regex_vec = vec![
-                __regex::Regex::new("^((?u:[\u{0}-\u{8}\u{e}-\u{1f}!-\\&\\*-Z\\\\-\\\\\\^-z\\~-\u{84}\u{86}-\u{9f}¡-ᙿᚁ-\u{1fff}\u{200b}-‧\u{202a}-\u{202e}‰-⁞\u{2060}-\u{2fff}、-\u{10ffff}])+)").unwrap(),
+                __regex::Regex::new("^((?u:[\u{0}-\u{8}\u{e}-\u{1f}!-\'\\*-\u{84}\u{86}-\u{9f}¡-ᙿᚁ-\u{1fff}\u{200b}-‧\u{202a}-\u{202e}‰-⁞\u{2060}-\u{2fff}、-\u{10ffff}])+)").unwrap(),
                 __regex::Regex::new("^((?u:[\t-\r - \u{85}-\u{85}\u{a0}-\u{a0}\u{1680}-\u{1680}\u{2000}-\u{200a}\u{2028}-\u{2029}\u{202f}-\u{202f}\u{205f}-\u{205f}\u{3000}-\u{3000}])+)").unwrap(),
                 __regex::Regex::new("^((?u:\\())").unwrap(),
                 __regex::Regex::new("^((?u:\\)))").unwrap(),

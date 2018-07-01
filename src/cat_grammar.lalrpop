@@ -2,7 +2,7 @@ use ast;
 
 grammar;
 
-pub AtomT: ast::Atom<'input> = r"[^\s\[\]\(\)\{\}'|]+"
+pub AtomT: ast::Atom<'input> = r"[^\s\(\)]+"
     => ast::Atom::from(<>); // One of ast::Atom::{Num, Sym}
 
 Sep = r"\s+";

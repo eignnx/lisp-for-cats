@@ -59,7 +59,7 @@ fn try_args(input: &str) {
 }
 
 fn main() {
-    try_args("(100 200)");
+    try_args("(100 200 300)");
 }
 
 
