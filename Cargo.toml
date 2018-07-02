@@ -14,6 +14,7 @@ build = "build.rs" # LALRPOP preprocessing
 lalrpop-util = "0.15.2"
 regex = "0.2.0"
 im = "10.2.0"
+rug = "1.2.0"
 
 # Add a build-time dependency on the lalrpop library:
 [build-dependencies]

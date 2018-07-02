@@ -2,17 +2,8 @@ use ast;
 
 grammar;
 
-pub AtomT: ast::Atom<'input> = r"[^\s\(\)]+"
-    => ast::Atom::from(<>); // One of ast::Atom::{Num, Sym}
-
-pub ExprT: ast::Expr<'input> = {
-
-    AtomT => ast::Expr::Atom(<>),
-
-    "(" <first: ExprT> <rest: ExprT*> ")" => {
-        let mut v = vec![first];
-        v.extend(rest);
-        ast::Expr::from(v) // Converts into ast::Expr::SExpr
-    }
+pub Expr: ast::Expr = {
+    r"[^\s\(\)]+" => ast::Expr::atom(<>),
+    "(" <args: Expr+> ")" => ast::Expr::list(args),
 }
 

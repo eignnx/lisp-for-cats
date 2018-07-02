@@ -1,66 +1,66 @@
 extern crate lalrpop_util;
 #[macro_use] extern crate im;
+extern crate rug;
 
 mod ast;
 mod cat_grammar;
 
-use ast::{Expr::*, Atom::*};
-
-#[test]
-fn atom_recognition() {
-    let atom_parser = cat_grammar::AtomTParser::new();
-
-    let expected = atom_parser.parse("5").unwrap();
-    let returned = Num(5);
-    assert_eq!(returned, expected);
-
-    let expected = atom_parser.parse("qwerty").unwrap();
-    let returned = Sym("qwerty");
-    assert_eq!(returned, expected);
-}
-
-#[test]
-fn simple_expr_recognition() {
-    let expr_parser = cat_grammar::ExprTParser::new();
-
-    let returned = expr_parser.parse("5").unwrap();
-    let expected = Atom(Num(5));
-    assert_eq!(returned, expected);
-
-    let returned = expr_parser.parse("qwerty").unwrap();
-    let expected = Atom(Sym("qwerty"));
-    assert_eq!(returned, expected);
-}
-
-#[test]
-fn sexpr_recognition() {
-    let expr_parser = cat_grammar::ExprTParser::new();
-
-    let returned = expr_parser.parse("(+ 1 2)").unwrap();
-    let expected =
-        SExpr(conslist![
-            Atom(Sym("+")),
-            Atom(Num(1)),
-            Atom(Num(2))
-        ]);
-    assert_eq!(returned, expected);
-}
-
-
-fn try_args(input: &str) {
-    println!("Trying '{}'...", input);
-
-    let expr_parser = cat_grammar::ExprTParser::new();
-    let returned = expr_parser.parse(input);
-    match returned {
-        Ok(v) => println!("Success! got: {:?}", v),
-        Err(e) => println!("\nError! got:\n{}\n\n", e),
-    };
-}
+use rug::Rational;
+use ast::Expr::{self, *};
 
 fn main() {
-    try_args("(100 200 300)");
+    let tree =
+        List(vec![
+            List(vec![
+                Sym("lambda".to_string()),
+                List(vec![
+                    Sym("x".to_string()),
+                ]),
+                List(vec![
+                    Sym("+".to_string()),
+                    Sym("x".to_string()),
+                    Sym("x".to_string()),
+                ]),
+            ]),
+            Expr::atom("22/7")
+        ]);
+
+    println!("{:?}", tree);
+    println!("{}", tree);
 }
 
+fn parse<'a>(src: &'a str) -> Expr {
+    let parser = cat_grammar::ExprParser::new();
+    parser.parse(src).unwrap()
+}
 
+fn atom<'a>(src: &'a str) -> Expr {
+    Expr::atom(src)
+}
+
+#[test]
+fn test_atom_conversion_fn() {
+    assert_eq!(Expr::atom("123"),    Num(Rational::from((123, 1))));
+    assert_eq!(Expr::atom("22/7"),   Num(Rational::from((22, 7))));
+    assert_eq!(Expr::atom("lambda"), Sym("lambda".to_string()));
+    assert_eq!(Expr::atom("#t"),     Bool(true));
+    assert_eq!(Expr::atom("#f"),     Bool(false));
+}
+
+#[test]
+fn test_atoms() {
+    assert_eq!(parse("123"),    atom("123"));
+    assert_eq!(parse("22/7"),   atom("22/7"));
+    assert_eq!(parse("lambda"), atom("lambda"));
+    assert_eq!(parse("#t"),     Bool(true));
+    assert_eq!(parse("#f"),     Bool(false));
+}
+
+#[test]
+fn test_lists() {
+    let tree = List(vec![
+        atom("+"), atom("1"), atom("2")
+    ]);
+    assert_eq!(parse("(+ 1 2)"), tree); 
+}
 
