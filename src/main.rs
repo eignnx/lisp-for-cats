@@ -8,22 +8,25 @@ mod cat_grammar;
 use rug::Rational;
 use ast::Expr::{self, *};
 
+macro_rules! list {
+    ( $( $x:expr ),* ) => { List(vec![$($x,)*]) };
+    ( $( $x:expr ),* ,) => { List(vec![$($x,)*]) };
+}
+
 fn main() {
     let tree =
-        List(vec![
-            List(vec![
-                Sym("lambda".to_string()),
-                List(vec![
-                    Sym("x".to_string()),
-                ]),
-                List(vec![
-                    Sym("+".to_string()),
-                    Sym("x".to_string()),
-                    Sym("x".to_string()),
-                ]),
-            ]),
-            Expr::atom("22/7")
-        ]);
+        list![
+            list![
+                atom("lambda"),
+                list![atom("x")],
+                list![
+                    atom("+"),
+                    atom("x"),
+                    atom("x"),
+                ],
+            ],
+            atom("22/7")
+        ];
 
     println!("{:?}", tree);
     println!("{}", tree);
@@ -58,9 +61,20 @@ fn test_atoms() {
 
 #[test]
 fn test_lists() {
-    let tree = List(vec![
-        atom("+"), atom("1"), atom("2")
-    ]);
+    let tree = list![atom("+"), atom("1"), atom("2")];
     assert_eq!(parse("(+ 1 2)"), tree); 
+
+    let tree =
+        list![
+            atom("+"),
+            atom("1"),
+            list![
+                atom("*"),
+                atom("2"),
+                atom("3"),
+            ],
+            atom("4"),
+        ];
+    assert_eq!(parse("(+ 1 (* 2 3) 4)"), tree);
 }
 
