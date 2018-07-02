@@ -2,10 +2,10 @@ extern crate im;
 
 use std::fmt;
 
-use im::ordmap::OrdMap;
+use im::hashmap::HashMap;
 use rug::Rational;
 
-#[derive(PartialEq, Eq)]
+#[derive(PartialEq, Eq, Hash, Clone)]
 pub enum Expr {
     Sym(String),
     Num(Rational),
@@ -15,7 +15,13 @@ pub enum Expr {
 
 use Expr::*;
 
+pub type Context = HashMap<String, Expr>;
+
 impl Expr {
+
+    pub fn eval(&self, ctx: Context) -> (Expr, Context) {
+        (self.clone(), ctx)
+    }
 
     pub fn atom<'a>(src: &'a str) -> Self {
         if let Ok(n) = src.parse::<Rational>() {

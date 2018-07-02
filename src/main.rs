@@ -5,6 +5,8 @@ extern crate rug;
 mod ast;
 mod cat_grammar;
 
+use std::ops::Deref;
+
 use rug::Rational;
 use ast::Expr::{self, *};
 
@@ -76,5 +78,45 @@ fn test_lists() {
             atom("4"),
         ];
     assert_eq!(parse("(+ 1 (* 2 3) 4)"), tree);
+}
+
+#[test]
+fn test_to_string() {
+    let tree =
+        list![
+            list![
+                atom("lambda"),
+                list![atom("x")],
+                list![
+                    atom("+"),
+                    atom("x"),
+                    atom("x"),
+                ],
+            ],
+            atom("22/7")
+        ];
+
+    let expected = "((lambda (x) (+ x x)) 22/7)";
+    assert_eq!(tree.to_string(), expected);
+}
+
+fn eval<'a>(src: &'a str) -> Expr {
+    let tree = parse(src);
+    let ctx = hashmap!{
+        "x".to_string() => atom("100")
+    };
+    tree.eval(ctx).0
+}
+
+#[test]
+fn test_simple_evals() {
+    assert_eq!(eval("1"), atom("1"));
+    assert_eq!(eval("#t"), atom("#t"));
+    assert_eq!(eval("#f"), atom("#f"));
+}
+
+#[test]
+fn test_lambda_invocation() {
+    assert_eq!(eval("((lambda (x) (* x x)) 12)"), atom("144"));
 }
 
