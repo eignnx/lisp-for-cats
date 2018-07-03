@@ -1,5 +1,8 @@
 extern crate im;
 
+mod procedure;
+use self::procedure::*;
+
 use std::fmt;
 
 use im::hashmap::HashMap;
@@ -11,6 +14,7 @@ pub enum Expr {
     Num(Rational),
     Bool(bool),
     List(Vec<Expr>),
+    Proc(Procedure),
 }
 
 use Expr::*;
@@ -48,6 +52,7 @@ impl Expr {
             Sym(s)  => writeln!(f, "{}(Sym {})",  indent, s),
             Num(r)  => writeln!(f, "{}(Num {})",  indent, r),
             Bool(b) => writeln!(f, "{}(Bool {})", indent, b),
+            Proc(p) => writeln!(f, "{}(Proc {})", indent, p.id()),
             List(v) => {
                 writeln!(f, "{}(List", indent)?;
                 for child in v {
@@ -71,6 +76,7 @@ impl fmt::Display for Expr {
             Sym(s)  => write!(f, "{}", s),
             Num(r)  => write!(f, "{}", r),
             Bool(b) => write!(f, "{}", b),
+            Proc(p) => write!(f, "{}", p),
             List(v) => match v.split_last() {
                 Some((last, but_last)) => {
                     write!(f, "(")?;
